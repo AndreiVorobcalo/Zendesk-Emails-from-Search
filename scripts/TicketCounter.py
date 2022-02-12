@@ -15,7 +15,7 @@ def run(logger, filename, n_hours, domain, auth):
 
   logger.warning('Populating Output File. This is gonna take a while. Go drink some tea.')
   try:
-    for i in range(n_hours): # (4380 HOURS IN HALF A YEAR)
+    for i in range(-1): # (4380 HOURS IN HALF A YEAR)
       st0, st1, xdst0, xtst0, xtst1 = get_formatted_datetimes(i)
 
       lst = get_tickets(domain, auth, st0, st1)
@@ -44,6 +44,8 @@ def get_formatted_datetimes(t_delta):
 
 # takes the zendesk account subdomain, and a start and end datetime (%Y-%m-%dT%H:%M:%SZ)
 # returns the result of a GET request to the Zendesk v2 API
+# add "tags" search in the url (line 52)
+# give email adrress of the ticket with the set tag.
 
 def get_tickets(dom, auth, st0, st1):
   print(b64encode(auth.encode('utf-8'))[2:-1])
@@ -61,4 +63,4 @@ if __name__ =="__main__":
     # TODO: set logging level based on input
     logger = logging.getLogger()
     logger.setLevel(logging.INFO)
-    run(logger)
+   

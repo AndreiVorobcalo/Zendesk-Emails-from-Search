@@ -8,6 +8,8 @@ import configparser
 import logging
 import smtplib
 import os
+import pandas as pd
+import json
 import TicketCounter as TC
 
 
@@ -21,7 +23,7 @@ PASS = config['email']['Password'].strip('"')
 RECIPIENT = config['email']['Recipient'].strip('"')
 TAGS = config['mods']['SearchTags']
 
-def main(logger):
+def main(logger, filename, domain, auth):
 
     # Initialize an empty list to hold the emails
     EmailList = []
@@ -30,7 +32,9 @@ def main(logger):
     if not os.path.exists(OUTPUT_FILE):
         logger.warning('Output File not found. Creating...')
         #import in csv as list
-        #EmailList = ...
+        columns = list(range(24))
+        EmailList = pd.DataFrame(columns = columns)
+        EmailList.to_csv(filename)
         logger.warning('Output File generated and ready for usage.')
     else:
         logger.warning('Output File already exists. Querying new results.')
@@ -44,6 +48,9 @@ def main(logger):
         EmailList.append(ticket['via']['source']['from']['address'])
     try:
         # save email list to csv
+        lst = TC.get_formatted_datetimes(1)
+        lst = json.loads(lst.text)
+        EmailList.to_csv(filename)
         pass 
     except Exception as e:
         logger.warning('Error saving file, {}'.format(str(e)))
